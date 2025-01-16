@@ -1,4 +1,6 @@
 package org.example;
+import java.io.PipedReader;
+import java.io.SyncFailedException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -75,6 +77,14 @@ public class Test {
                 .orElse(0.0);
     }
 
+    public static Map<String,Double> sumCategory (List<Product> productList){
+            return productList.stream()
+                    .collect(Collectors.groupingBy(
+                       Product::getCategory,
+                       Collectors.summingDouble(Product::getPrice)
+                    ));
+    }
+
 
 
     public static void main(String[] args){
@@ -120,6 +130,7 @@ public class Test {
         Map<Customer, Double> salesByCustomer = totalSalesByCustomer(orderList);
         List<Product> mostExpensiveProducts = findMostExpensiveProducts(productList);
         double mediaImporti = media (orderList);
+        Map<String, Double> result = sumCategory(productList);
 
 
 
@@ -152,6 +163,9 @@ public class Test {
         System.out.println("------------");
         System.out.println("La media degli importi degli ordini è: " + mediaImporti);
         System.out.println("------------");
+        System.out.println("La somma per categoria è:");
+        result.forEach((categoria, somma) -> System.out.println(categoria + ": " + somma));
+
     }
 
 }

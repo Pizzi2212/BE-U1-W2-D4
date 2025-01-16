@@ -65,10 +65,16 @@ public class Test {
                 .collect(Collectors.toList())
                 : Collections.emptyList();
     }
-    public static List<Order> media (List<Order> orderList){
+    public static double media (List<Order> orderList) {
         return orderList.stream()
-                .mapToDouble()
+                .mapToDouble(order -> order.getProducts().stream()
+                        .mapToDouble(Product::getPrice)
+                        .sum()
+                )
+                .average()
+                .orElse(0.0);
     }
+
 
 
     public static void main(String[] args){
@@ -113,6 +119,7 @@ public class Test {
         Map<Customer,List<Order>> ordersByCustomer = orderClients(orderList);
         Map<Customer, Double> salesByCustomer = totalSalesByCustomer(orderList);
         List<Product> mostExpensiveProducts = findMostExpensiveProducts(productList);
+        double mediaImporti = media (orderList);
 
 
 
@@ -142,5 +149,9 @@ public class Test {
         System.out.println("------------");
         System.out.println("I prodotti più costosi sono:");
         mostExpensiveProducts.forEach(System.out::println);
+        System.out.println("------------");
+        System.out.println("La media degli importi degli ordini è: " + mediaImporti);
+        System.out.println("------------");
     }
+
 }
